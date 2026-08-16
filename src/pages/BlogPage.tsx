@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { DecorativeBackground } from '../components/DecorativeBackground';
+import { useLanguage } from '../context/LanguageContext';
 import { Sparkles, Calendar, Clock, ArrowRight } from 'lucide-react';
 
 export const BlogPage: React.FC = () => {
+  const { t, isRTL } = useLanguage();
+
   const articles = [
     {
       id: 1,
@@ -42,13 +45,13 @@ export const BlogPage: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teachy-lavender text-teachy-purple text-xs font-bold">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>Teachy Learning Insights</span>
+            <span>{t('blogPage.badge')}</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-serif font-black text-teachy-dark">
-            Language Tips &amp; Stories
+            {t('blogPage.title')}
           </h1>
           <p className="text-sm text-gray-600">
-            Actionable advice, conversational science, and learning strategies curated by our native tutors.
+            {t('blogPage.subtitle')}
           </p>
         </div>
 
@@ -91,8 +94,8 @@ export const BlogPage: React.FC = () => {
                   to="/signup"
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-teachy-purple group-hover:text-teachy-pink transition-colors"
                 >
-                  <span>Practice with a tutor</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>{t('blogPage.practiceBtn')}</span>
+                  <ArrowRight className={`w-3.5 h-3.5 ${isRTL ? 'mr-1 rotate-180' : 'ml-1'}`} />
                 </Link>
               </div>
             </div>

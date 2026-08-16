@@ -11,6 +11,10 @@
     background-color: #FFFFFF;
     color: #1E293B;
   }
+
+  body.rtl-active {
+    font-family: 'Cairo', 'Inter', system-ui, sans-serif;
+  }
 }
 
 /* Custom Squiggle Underline Animation & Style */

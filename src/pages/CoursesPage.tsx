@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { CourseCard } from '../components/CourseCard';
 import { DecorativeBackground } from '../components/DecorativeBackground';
-import { Search, Filter, Sparkles, BookOpen } from 'lucide-react';
+import { Search, Filter, Sparkles } from 'lucide-react';
 
 export const CoursesPage: React.FC = () => {
   const { courses } = useAuth();
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
@@ -38,13 +40,13 @@ export const CoursesPage: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teachy-lavender text-teachy-purple text-xs font-bold">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>Interactive Curriculum</span>
+            <span>{t('coursesPage.badge')}</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-serif font-black text-teachy-dark">
-            Explore All Language Courses
+            {t('coursesPage.title')}
           </h1>
           <p className="text-sm text-gray-600">
-            From foundational pronunciation to advanced business fluency, choose your path and practice live with certified native tutors.
+            {t('coursesPage.subtitle')}
           </p>
         </div>
 
@@ -58,7 +60,7 @@ export const CoursesPage: React.FC = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search courses, topics, keywords..."
+                placeholder={t('coursesPage.searchPlaceholder')}
                 className="w-full pl-10 pr-4 py-2.5 rounded-full border border-purple-100 text-xs text-teachy-dark focus:outline-none focus:ring-2 focus:ring-teachy-purple"
               />
             </div>
@@ -75,7 +77,7 @@ export const CoursesPage: React.FC = () => {
                       : 'bg-gray-100 text-gray-600 hover:bg-teachy-lavender'
                   }`}
                 >
-                  {lang}
+                  {lang === 'All' ? t('courses.filter.all') : lang}
                 </button>
               ))}
             </div>
@@ -84,7 +86,7 @@ export const CoursesPage: React.FC = () => {
           {/* Level Filter */}
           <div className="flex items-center gap-2 pt-3 border-t border-gray-100 text-xs">
             <span className="font-semibold text-gray-500 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5" /> Proficiency Level:
+              <Filter className="w-3.5 h-3.5" /> {t('coursesPage.proficiencyLevel')}
             </span>
             <div className="flex gap-2">
               {levels.map((lvl) => (
@@ -104,30 +106,28 @@ export const CoursesPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Results Grid */}
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((course) => (
+        {/* Courses Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.length > 0 ? (
+            filtered.map((course) => (
               <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16 bg-white rounded-3xl border border-purple-100 p-8 space-y-3">
-            <BookOpen className="w-12 h-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-bold text-gray-700">No matching courses found</h3>
-            <p className="text-xs text-gray-500">Try adjusting your search terms or filter selections.</p>
-            <button
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedLanguage('All');
-                setSelectedLevel('All');
-              }}
-              className="mt-2 text-xs font-bold text-teachy-purple hover:underline"
-            >
-              Reset Filters
-            </button>
-          </div>
-        )}
+            ))
+          ) : (
+            <div className="col-span-full text-center py-16 bg-white rounded-3xl border border-purple-100">
+              <p className="text-gray-500 text-sm">No courses found matching your search filter.</p>
+              <button
+                onClick={() => {
+                  setSelectedLanguage('All');
+                  setSelectedLevel('All');
+                  setSearchTerm('');
+                }}
+                className="mt-3 text-xs text-teachy-purple font-bold hover:underline"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
+        </div>
 
       </div>
     </div>

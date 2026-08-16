@@ -6,6 +6,7 @@ import { DecorativeBackground } from '../components/DecorativeBackground';
 import { CourseCard } from '../components/CourseCard';
 import { TutorCard } from '../components/TutorCard';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import {
   Phone,
   ArrowRight,
@@ -18,6 +19,7 @@ import {
 
 export const HomePage: React.FC = () => {
   const { courses, tutors, isAuthenticated } = useAuth();
+  const { t, isRTL } = useLanguage();
   const navigate = useNavigate();
   const [activeLanguageFilter, setActiveLanguageFilter] = useState('All');
   const [quizAnswer, setQuizAnswer] = useState<number | null>(null);
@@ -32,62 +34,62 @@ export const HomePage: React.FC = () => {
     <div className="relative min-h-screen">
       <DecorativeBackground showRibbon={true} />
 
-      {/* HERO SECTION - Exact Match of Slide 10 */}
+      {/* HERO SECTION */}
       <section className="relative pt-6 sm:pt-12 pb-16 lg:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[580px]">
             
             {/* Left Column: Copy & Actions */}
-            <div className="lg:col-span-6 space-y-6 sm:space-y-8 z-10 text-center lg:text-left">
+            <div className={`lg:col-span-6 space-y-6 sm:space-y-8 z-10 text-center ${isRTL ? 'lg:text-right' : 'lg:text-left'}`}>
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teachy-lavender border border-purple-200/80 text-xs font-bold text-teachy-purple animate-pulse-subtle">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>1-on-1 Native Conversation Immersion</span>
+                <span>{t('hero.badge')}</span>
               </div>
 
               {/* Main Headline with Squiggle Underline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold text-teachy-dark tracking-tight leading-[1.15]">
-                Join Our{' '}
-                <SquiggleUnderline color="#FBBF24">Online</SquiggleUnderline>{' '}
-                <span className="text-teachy-purple block sm:inline">Language Courses</span>
+                {t('hero.title.join')}{' '}
+                <SquiggleUnderline color="#FBBF24">{t('hero.title.online')}</SquiggleUnderline>{' '}
+                <span className="text-teachy-purple block sm:inline">{t('hero.title.courses')}</span>
               </h1>
 
               {/* Subtext */}
               <p className="text-base sm:text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Our language courses are expertly designed to transform your verbal communication skills through live, personalized conversation practice with native certified tutors.
+                {t('hero.subtitle')}
               </p>
 
               {/* Action Button & Contact Info */}
               <div className="space-y-4 pt-2">
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <div className={`flex flex-col sm:flex-row items-center justify-center ${isRTL ? 'lg:justify-end' : 'lg:justify-start'} gap-4`}>
                   <Link
                     to={isAuthenticated ? "/course" : "/signup"}
                     className="w-full sm:w-auto inline-flex items-center justify-center bg-teachy-pink hover:bg-teachy-pink-hover text-white text-base font-bold px-8 py-4 rounded-full shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-[1.02]"
                   >
-                    <span>Register Now</span>
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    <span>{t('hero.cta.register')}</span>
+                    <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-2 rotate-180' : 'ml-2'}`} />
                   </Link>
 
                   <Link
                     to="/course"
                     className="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-teachy-lavender/60 text-teachy-purple border border-purple-200 text-sm font-bold px-6 py-4 rounded-full shadow-sm transition-all"
                   >
-                    <Play className="w-4 h-4 mr-2 fill-teachy-purple" />
-                    <span>Watch Demo Call</span>
+                    <Play className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'} fill-teachy-purple`} />
+                    <span>{t('hero.cta.watchDemo')}</span>
                   </Link>
                 </div>
 
                 {/* Instant Demo Phone Line */}
                 <div className="pt-2">
                   <a
-                    href="tel:+212663181723"
+                    href="tel:0666774426"
                     className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 hover:text-teachy-purple transition-colors group"
                   >
                     <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center group-hover:bg-teachy-purple group-hover:text-white transition-colors">
                       <Phone className="w-3.5 h-3.5 text-teachy-purple group-hover:text-white" />
                     </div>
-                    <span>Contact us for an instant demo class:</span>
+                    <span>{t('hero.demoPhoneText')}</span>
                     <span className="text-teachy-purple font-mono font-bold text-sm tracking-wide">
-                      +212 663-181723
+                      0666774426
                     </span>
                   </a>
                 </div>
@@ -112,22 +114,21 @@ export const HomePage: React.FC = () => {
                     alt="Teachy Student Learning Languages"
                     className="w-full max-w-[340px] sm:max-w-[400px] h-auto object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
                     onError={(e) => {
-                      // Fallback high quality student image if local path fails
                       (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800";
                     }}
                   />
 
                   {/* Live Tutor Match Floating Card */}
-                  <div className="absolute -bottom-6 left-2 sm:-left-6 bg-white/95 backdrop-blur-md rounded-2xl p-3.5 shadow-xl border border-purple-100 flex items-center gap-3 animate-pulse-subtle">
+                  <div className={`absolute -bottom-6 ${isRTL ? '-right-2 sm:-right-6' : '-left-2 sm:-left-6'} bg-white/95 backdrop-blur-md rounded-2xl p-3.5 shadow-xl border border-purple-100 flex items-center gap-3 animate-pulse-subtle`}>
                     <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
                       <Video className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                        <p className="text-xs font-bold text-teachy-dark">Live Tutors Ready</p>
+                        <p className="text-xs font-bold text-teachy-dark">{t('hero.liveTutorsReady')}</p>
                       </div>
-                      <p className="text-[11px] text-gray-500">Instant 1-on-1 Practice</p>
+                      <p className="text-[11px] text-gray-500">{t('hero.instantPractice')}</p>
                     </div>
                   </div>
                 </div>
@@ -148,20 +149,20 @@ export const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">15,000+</p>
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">Active Global Learners</p>
+              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">10,000+</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">{t('stats.learners')}</p>
             </div>
             <div>
-              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">450+</p>
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">Certified Native Tutors</p>
+              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">500+</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">{t('stats.tutors')}</p>
             </div>
             <div>
-              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">98.4%</p>
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">Fluency Satisfaction</p>
+              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">50,000+</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">{t('stats.hours')}</p>
             </div>
             <div>
-              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">15 min</p>
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">Free Instant Demo</p>
+              <p className="text-3xl sm:text-4xl font-black text-teachy-purple font-serif">98%</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1">{t('stats.satisfaction')}</p>
             </div>
           </div>
         </div>
@@ -172,13 +173,13 @@ export const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <h2 className="text-xs font-bold uppercase tracking-widest text-teachy-purple mb-2">
-              Proven Immersion Method
+              {t('method.badge')}
             </h2>
             <h3 className="text-3xl sm:text-4xl font-serif font-bold text-teachy-dark">
-              How Teachy Transforms Your Speaking
+              {t('method.title')}
             </h3>
             <p className="text-sm text-gray-600 mt-3">
-              Forget boring grammar charts. Real fluency comes from active conversation with supportive native speakers.
+              {t('method.subtitle')}
             </p>
           </div>
 
@@ -188,9 +189,9 @@ export const HomePage: React.FC = () => {
               <div className="w-12 h-12 rounded-2xl bg-teachy-lavender text-teachy-purple flex items-center justify-center font-black text-lg mb-6 group-hover:bg-teachy-purple group-hover:text-white transition-colors">
                 1
               </div>
-              <h4 className="text-xl font-bold text-teachy-dark mb-2">Select Your Language & Level</h4>
+              <h4 className="text-xl font-bold text-teachy-dark mb-2">{t('method.card1.title')}</h4>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Choose from English, Spanish, French, German, Mandarin, or Arabic. Pick your target fluency goals and topic interests.
+                {t('method.card1.desc')}
               </p>
             </div>
 
@@ -199,9 +200,9 @@ export const HomePage: React.FC = () => {
               <div className="w-12 h-12 rounded-2xl bg-teachy-lavender text-teachy-purple flex items-center justify-center font-black text-lg mb-6 group-hover:bg-teachy-purple group-hover:text-white transition-colors">
                 2
               </div>
-              <h4 className="text-xl font-bold text-teachy-dark mb-2">Match with Native Certified Tutors</h4>
+              <h4 className="text-xl font-bold text-teachy-dark mb-2">{t('method.card2.title')}</h4>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Listen to tutor voice intros, check accents, and start 1-on-1 live video calls instantly or on your schedule.
+                {t('method.card2.desc')}
               </p>
             </div>
 
@@ -210,9 +211,9 @@ export const HomePage: React.FC = () => {
               <div className="w-12 h-12 rounded-2xl bg-pink-100 text-teachy-pink flex items-center justify-center font-black text-lg mb-6 group-hover:bg-teachy-pink group-hover:text-white transition-colors">
                 3
               </div>
-              <h4 className="text-xl font-bold text-teachy-dark mb-2">Live Conversational Mastery</h4>
+              <h4 className="text-xl font-bold text-teachy-dark mb-2">{t('method.card3.title')}</h4>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Receive instant pronunciation corrections, live speech notes, and track your speaking streak and vocabulary growth.
+                {t('method.card3.desc')}
               </p>
             </div>
           </div>
@@ -225,10 +226,10 @@ export const HomePage: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-teachy-purple">
-                Explore Curriculum
+                {t('courses.home.badge')}
               </span>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-teachy-dark mt-1">
-                Popular Language Courses
+                {t('courses.home.title')}
               </h2>
             </div>
 
@@ -244,7 +245,7 @@ export const HomePage: React.FC = () => {
                       : 'bg-white text-gray-700 hover:bg-teachy-lavender border border-purple-100'
                   }`}
                 >
-                  {lang}
+                  {lang === 'All' ? t('courses.filter.all') : lang}
                 </button>
               ))}
             </div>
@@ -262,8 +263,8 @@ export const HomePage: React.FC = () => {
               to="/courses"
               className="inline-flex items-center gap-2 text-sm font-bold text-teachy-purple hover:underline"
             >
-              <span>View all available courses and specializations</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>{t('courses.viewAll')}</span>
+              <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-2 rotate-180' : 'ml-2'}`} />
             </Link>
           </div>
         </div>
@@ -276,14 +277,14 @@ export const HomePage: React.FC = () => {
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full mb-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Available Right Now
+                {t('tutors.home.badge')}
               </div>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-teachy-dark">
-                Meet Your Native Conversation Tutors
+                {t('tutors.home.title')}
               </h2>
             </div>
             <p className="text-xs text-gray-500 max-w-sm">
-              Click &quot;Listen Voice&quot; on any tutor card to hear their authentic accent and teaching style.
+              {t('tutors.home.subtitle')}
             </p>
           </div>
 
@@ -295,7 +296,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* INTERACTIVE FLUENCY QUICK CHECK / SOUNDBOARD */}
+      {/* INTERACTIVE FLUENCY QUICK CHECK */}
       <section className="py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-teachy-purple to-teachy-purple-dark text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
@@ -307,23 +308,23 @@ export const HomePage: React.FC = () => {
             <div className="relative z-10 max-w-2xl">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-xs font-semibold mb-4 backdrop-blur-sm">
                 <Award className="w-3.5 h-3.5 text-amber-300" />
-                <span>Interactive Fluency Check</span>
+                <span>{t('quiz.badge')}</span>
               </div>
 
               <h3 className="text-2xl sm:text-3xl font-serif font-bold mb-3">
-                What is your biggest hurdle in speaking a new language?
+                {t('quiz.title')}
               </h3>
               <p className="text-sm text-purple-100 mb-6">
-                Teachy tutors are specially trained to solve confidence blockers with proven 1-on-1 conversational methods.
+                {t('hero.subtitle')}
               </p>
 
               {/* Quiz Buttons */}
               <div className="space-y-3">
                 {[
-                  'Hesitation & fear of making grammatical mistakes',
-                  'Difficulty understanding rapid native accents & slang',
-                  'Translating in my head instead of thinking in the language',
-                  'Lack of native practice partners in my daily routine',
+                  t('quiz.opt1'),
+                  t('quiz.opt2'),
+                  t('quiz.opt3'),
+                  t('quiz.opt4'),
                 ].map((option, idx) => (
                   <button
                     key={idx}
@@ -343,14 +344,14 @@ export const HomePage: React.FC = () => {
               {quizAnswer !== null && (
                 <div className="mt-6 p-4 rounded-2xl bg-white/20 backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <p className="text-xs sm:text-sm font-semibold text-white">
-                    🎯 Teachy 1-on-1 live sessions are designed exactly for this! Take a free 15-minute trial session today.
+                    🎯 {t('quiz.result')}
                   </p>
                   <button
                     onClick={() => navigate('/signup')}
                     className="mt-3 inline-flex items-center gap-2 bg-teachy-pink hover:bg-teachy-pink-hover text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-md transition-all"
                   >
-                    <span>Start Free Trial Class</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>{t('quiz.cta')}</span>
+                    <ArrowRight className={`w-3.5 h-3.5 ${isRTL ? 'mr-2 rotate-180' : 'ml-2'}`} />
                   </button>
                 </div>
               )}
@@ -363,24 +364,25 @@ export const HomePage: React.FC = () => {
       <section className="py-20 text-center relative">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <h2 className="text-3xl sm:text-5xl font-serif font-black text-teachy-dark leading-tight">
-            Ready to Speak Confidently with <span className="text-teachy-purple">teachy</span>?
+            {t('cta.title')}
           </h2>
           <p className="text-base text-gray-600 max-w-xl mx-auto">
-            Join thousands of students mastering English, Spanish, French, German, Arabic, and Chinese through live conversation.
+            {t('cta.subtitle')}
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/signup"
               className="w-full sm:w-auto inline-flex items-center justify-center bg-teachy-pink hover:bg-teachy-pink-hover text-white text-base font-bold px-8 py-4 rounded-full shadow-lg shadow-pink-500/25 transition-all transform hover:scale-[1.02]"
             >
-              <span>Get Started Free</span>
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <span>{t('cta.button')}</span>
+              <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-2 rotate-180' : 'ml-2'}`} />
             </Link>
             <a
-              href="tel:+212663181723"
-              className="text-sm font-semibold text-gray-700 hover:text-teachy-purple"
+              href="tel:0666774426"
+              className="text-sm font-semibold text-gray-700 hover:text-teachy-purple flex items-center gap-1.5"
             >
-              Call +212 663-181723
+              <Phone className="w-4 h-4 text-teachy-purple" />
+              <span>0666774426</span>
             </a>
           </div>
         </div>

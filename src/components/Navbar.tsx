@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { TeachyLogo } from './TeachyLogo';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { GithubIcon } from './GithubIcon';
 import {
   Menu,
   X,
@@ -16,6 +19,7 @@ import {
 
 export const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -46,54 +50,67 @@ export const Navbar: React.FC = () => {
     }`;
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-purple-100/60 shadow-sm transition-all">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-purple-100/60 shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo Left */}
-          <div className="flex-shrink-0">
+          <div className="flex items-center gap-3">
             <TeachyLogo size="md" />
+            <a
+              href="https://github.com/mohammed-el-baraka/teachy-platform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-50 text-teachy-purple border border-purple-200/60 text-[11px] font-bold hover:bg-purple-100 transition-colors"
+              title="View full source code on GitHub"
+            >
+              <GithubIcon className="w-3 h-3" />
+              <span>Demo</span>
+            </a>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-3">
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {isAuthenticated ? (
               <>
                 <NavLink to="/" className={navLinkClass} end>
-                  Home
+                  {t('nav.home')}
                 </NavLink>
                 <NavLink to="/courses" className={navLinkClass}>
-                  Courses
+                  {t('nav.courses')}
                 </NavLink>
                 <NavLink to="/course" className={navLinkClass}>
-                  Live Session
+                  {t('nav.liveSession')}
                 </NavLink>
                 <NavLink to="/mypath" className={navLinkClass}>
-                  My path
+                  {t('nav.myPath')}
                 </NavLink>
                 <NavLink to="/history" className={navLinkClass}>
-                  History
+                  {t('nav.history')}
                 </NavLink>
               </>
             ) : (
               <>
                 <NavLink to="/" className={navLinkClass} end>
-                  Home
+                  {t('nav.home')}
                 </NavLink>
                 <NavLink to="/courses" className={navLinkClass}>
-                  Courses
+                  {t('nav.courses')}
                 </NavLink>
                 <NavLink to="/blog" className={navLinkClass}>
-                  Blog
+                  {t('nav.blog')}
                 </NavLink>
                 <NavLink to="/about" className={navLinkClass}>
-                  About
+                  {t('nav.about')}
                 </NavLink>
               </>
             )}
           </nav>
 
-          {/* Right Action Button / Account Pill */}
+          {/* Right Action Button / Language Switcher / Account Pill */}
           <div className="hidden md:flex items-center space-x-3">
+            {/* Language Switcher Dropdown */}
+            <LanguageSwitcher variant="nav" />
+
             {isAuthenticated && user ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -104,7 +121,7 @@ export const Navbar: React.FC = () => {
                   <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">
                     {user.name.charAt(0)}
                   </span>
-                  <span>my account</span>
+                  <span>{t('nav.myAccount')}</span>
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${accountMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -116,7 +133,7 @@ export const Navbar: React.FC = () => {
                       <p className="text-xs text-gray-500 truncate">{user.email}</p>
                       <div className="mt-2 flex items-center gap-2 text-xs font-medium text-teachy-purple bg-teachy-lavender px-2.5 py-1 rounded-lg">
                         <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                        <span>{user.streakDays} Day Streak 🔥</span>
+                        <span>{user.streakDays} {t('nav.streak')} 🔥</span>
                       </div>
                     </div>
 
@@ -127,7 +144,7 @@ export const Navbar: React.FC = () => {
                         className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-teachy-lavender/50 rounded-xl transition-colors"
                       >
                         <BookOpen className="w-4 h-4 text-teachy-purple" />
-                        <span>English Course (Live)</span>
+                        <span>{t('nav.liveSession')}</span>
                       </Link>
                       <Link
                         to="/mypath"
@@ -135,7 +152,7 @@ export const Navbar: React.FC = () => {
                         className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-teachy-lavender/50 rounded-xl transition-colors"
                       >
                         <Sparkles className="w-4 h-4 text-teachy-purple" />
-                        <span>My Learning Path</span>
+                        <span>{t('nav.myPath')}</span>
                       </Link>
                       <Link
                         to="/history"
@@ -143,7 +160,7 @@ export const Navbar: React.FC = () => {
                         className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-teachy-lavender/50 rounded-xl transition-colors"
                       >
                         <Award className="w-4 h-4 text-teachy-purple" />
-                        <span>Session History & Feedback</span>
+                        <span>{t('nav.history')}</span>
                       </Link>
                     </div>
 
@@ -153,7 +170,7 @@ export const Navbar: React.FC = () => {
                         className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-rose-600 hover:bg-rose-50 rounded-xl transition-colors font-medium"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Log Out</span>
+                        <span>{t('nav.logout')}</span>
                       </button>
                     </div>
                   </div>
@@ -165,20 +182,21 @@ export const Navbar: React.FC = () => {
                   to="/login"
                   className="text-sm font-medium text-teachy-dark hover:text-teachy-purple px-4 py-2 rounded-full transition-colors"
                 >
-                  Log in
+                  {t('nav.signIn')}
                 </Link>
                 <Link
                   to="/signup"
                   className="bg-teachy-purple hover:bg-teachy-purple-dark text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-md shadow-purple-500/20 transition-all duration-200 transform hover:scale-[1.02] hover:shadow-purple-500/30"
                 >
-                  Sign Up
+                  {t('nav.getStarted')}
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center">
+          {/* Mobile Menu Button & Mobile Lang */}
+          <div className="flex md:hidden items-center gap-2">
+            <LanguageSwitcher variant="nav" />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-xl text-gray-600 hover:text-teachy-purple hover:bg-teachy-lavender/50 focus:outline-none"
@@ -201,35 +219,35 @@ export const Navbar: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  Home
+                  {t('nav.home')}
                 </Link>
                 <Link
                   to="/courses"
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  Courses
+                  {t('nav.courses')}
                 </Link>
                 <Link
                   to="/course"
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-teachy-purple font-semibold bg-teachy-lavender/40"
                 >
-                  Live Session (Call)
+                  {t('nav.liveSession')}
                 </Link>
                 <Link
                   to="/mypath"
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  My path
+                  {t('nav.myPath')}
                 </Link>
                 <Link
                   to="/history"
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  History
+                  {t('nav.history')}
                 </Link>
                 <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -243,7 +261,7 @@ export const Navbar: React.FC = () => {
                     }}
                     className="text-xs text-rose-600 font-semibold px-3 py-1.5 rounded-lg bg-rose-50"
                   >
-                    Log Out
+                    {t('nav.logout')}
                   </button>
                 </div>
               </>
@@ -254,28 +272,28 @@ export const Navbar: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  Home
+                  {t('nav.home')}
                 </Link>
                 <Link
                   to="/courses"
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  Courses
+                  {t('nav.courses')}
                 </Link>
                 <Link
                   to="/blog"
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  Blog
+                  {t('nav.blog')}
                 </Link>
                 <Link
                   to="/about"
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded-xl text-base font-medium text-gray-800 hover:bg-teachy-lavender"
                 >
-                  About
+                  {t('nav.about')}
                 </Link>
                 <div className="pt-3 border-t border-gray-100 flex flex-col gap-2">
                   <Link
@@ -283,14 +301,14 @@ export const Navbar: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-center py-2.5 rounded-full border border-purple-200 text-sm font-semibold text-teachy-purple"
                   >
-                    Log in
+                    {t('nav.signIn')}
                   </Link>
                   <Link
                     to="/signup"
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-center py-2.5 rounded-full bg-teachy-purple text-white text-sm font-semibold shadow-md"
                   >
-                    Sign Up
+                    {t('nav.getStarted')}
                   </Link>
                 </div>
               </>
